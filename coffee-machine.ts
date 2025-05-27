@@ -11,9 +11,9 @@ export class CoffeeMachine {
     }
 
     getCoffees() {
-        
+
         if(!this.hasPower){
-            throw new CoffeeMachineException('The machine must be onThe machine is off. Please turn it on');
+            throw new CoffeeMachineException('The machine is off. Please turn it on');
         }
         return this.coffees;
     }
@@ -21,6 +21,16 @@ export class CoffeeMachine {
     togglePower(state: boolean) {
        this.hasPower = state
        console.log(`Power ${state ? 'on' : 'off'}`);
+    }
+
+    addCoffee(coffee: Coffee) {
+        this.coffees.push(coffee);
+        console.log(`${coffee.getName()} added to the machine.`);
+    }
+
+    removeCoffee(coffeeName: string) {
+        this.coffees = this.coffees.filter(c => c.getName() !== coffeeName);
+        console.log(`${coffeeName} removed from the machine.`);
     }
 
 }
