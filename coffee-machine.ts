@@ -1,4 +1,5 @@
 import { Coffee } from "./coffee";
+import { CoffeeMachineException } from "./coffee-machine-exception";
 
 export class CoffeeMachine {
     private coffees: Coffee[]
@@ -10,6 +11,10 @@ export class CoffeeMachine {
     }
 
     getCoffees() {
+        
+        if(!this.hasPower){
+            throw new CoffeeMachineException('The machine must be onThe machine is off. Please turn it on');
+        }
         return this.coffees;
     }
 
@@ -17,5 +22,5 @@ export class CoffeeMachine {
        this.hasPower = state
        console.log(`Power ${state ? 'on' : 'off'}`);
     }
-    
+
 }
