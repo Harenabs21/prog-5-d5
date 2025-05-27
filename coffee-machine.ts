@@ -4,10 +4,12 @@ import { CoffeeMachineException } from "./coffee-machine-exception";
 export class CoffeeMachine {
     private coffees: Coffee[]
     private hasPower: boolean
+    private waterLevel: number
 
     constructor(coffees: Coffee[]){
         this.coffees = coffees;
         this.hasPower = true;
+        this.waterLevel = 100
     }
 
     getCoffees() {
@@ -31,6 +33,14 @@ export class CoffeeMachine {
     removeCoffee(coffeeName: string) {
         this.coffees = this.coffees.filter(c => c.getName() !== coffeeName);
         console.log(`${coffeeName} removed from the machine.`);
+    }
+
+    refillWater(): void {
+        if (!this.hasPower) {
+            throw new CoffeeMachineException("The machine is off. Please turn it on.");
+        }
+        this.waterLevel = 100;
+        console.log("Water refilled to 100%.");
     }
 
 }
