@@ -13,7 +13,9 @@ export class CoffeeMachine {
         return this.coffees;
     }
 
-    setHasPower(arg: boolean) {
-        return this.hasPower = arg
+    togglePower(state: boolean) {
+       this.hasPower = state
+       console.log(`Power ${state ? 'on' : 'off'}`);
     }
+    
 }
