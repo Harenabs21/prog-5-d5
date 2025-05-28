@@ -1,81 +1,39 @@
-import { CoffeeMachine } from './coffee-machine';
 import { Coffee } from './coffee';
-import { CoffeeMachineException } from './coffee-machine-exception';
+import { CoffeeMachine } from './coffee-machine';
 
-function main() {
-  // Mock Coffee objects
-  const espresso = { getName: () => 'Espresso', getPrice: () => 30 } as Coffee;
-  const latte = { getName: () => 'Latte', getPrice: () => 40 } as Coffee;
+const espresso = new Coffee('Espresso', 5, 10);
+const latte = new Coffee('Latte', 6, 8);
+const cappuccino = new Coffee('Cappuccino', 7, 5);
 
-  // Initialize CoffeeMachine
-  const machine = new CoffeeMachine([espresso, latte]);
+const coffeeMachine = new CoffeeMachine([espresso, latte, cappuccino]);
 
-  try {
-    console.log('=== Coffee Machine Simulation ===');
+try {
+  console.log('Displaying available coffees:');
+  coffeeMachine.getCoffees();
 
-    // Display available coffees
-    console.log(
-      'Available coffees:',
-      machine.getCoffees().map((c) => c.getName()),
-    );
+  console.log('\nInserting money:');
+  coffeeMachine.insertMoney(10);
 
-    // Insert money
-    console.log('\nInserting money...');
-    machine.insertMoney(50);
+  console.log('\nChoosing a coffee:');
+  coffeeMachine.chooseCoffee('Latte');
 
-    // Choose a coffee
-    console.log('\nChoosing Espresso...');
-    machine.chooseCoffee('Espresso');
+  console.log('\nDisplaying remaining coffees:');
+  coffeeMachine.getCoffees();
 
-    // Show remaining balance
-    console.log('\nRemaining balance:', machine['balance']);
+  console.log('\nRefilling water:');
+  coffeeMachine.refillWater();
 
-    // Refill water
-    console.log('\nRefilling water...');
-    machine.refillWater();
+  console.log('\nRestocking Cappuccino:');
+  coffeeMachine.restock('Cappuccino', 10);
 
-    // Turn off the machine and try to use it
-    console.log('\nTurning off the machine...');
-    machine.togglePower(false);
-    console.log('Trying to get coffees with the machine off...');
-    try {
-      machine.getCoffees();
-    } catch (error) {
-      if (error instanceof CoffeeMachineException) {
-        console.error('Caught error:', error.message);
-      }
-    }
+  console.log('\nDisplaying updated coffees:');
+  coffeeMachine.getCoffees();
 
-    // Turn on the machine
-    console.log('\nTurning the machine back on...');
-    machine.togglePower(true);
+  console.log('\nTurning off the coffee machine:');
+  coffeeMachine.togglePower(false);
 
-    // Add a new coffee
-    const cappuccino = {
-      getName: () => 'Cappuccino',
-      getPrice: () => 50,
-    } as Coffee;
-    machine.addCoffee(cappuccino);
-    console.log(
-      'Available coffees:',
-      machine.getCoffees().map((c) => c.getName()),
-    );
-
-    // Remove a coffee
-    machine.removeCoffee('Latte');
-    console.log(
-      'Available coffees after removing Latte:',
-      machine.getCoffees().map((c) => c.getName()),
-    );
-
-    console.log('\n=== End of Simulation ===');
-  } catch (error) {
-    if (error instanceof CoffeeMachineException) {
-      console.error('Error:', error.message);
-    } else {
-      console.error('Unexpected error:', error);
-    }
-  }
+  console.log('\nAttempting to use the machine when it is off:');
+  coffeeMachine.getCoffees();
+} catch (error: any) {
+  console.error(`Error: ${error.message}`);
 }
-
-main();
