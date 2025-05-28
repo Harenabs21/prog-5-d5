@@ -30,7 +30,7 @@ export class Coffee {
     }
   }
 
-  restock(quantity: number): void {
+  incrementStock(quantity: number): void {
     this.stock += quantity;
   }
 }
