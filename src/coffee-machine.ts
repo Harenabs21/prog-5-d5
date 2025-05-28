@@ -15,10 +15,19 @@ export class CoffeeMachine {
   }
 
   getCoffees() {
-    if (!this.hasPower) {
-      throw new CoffeeMachineException('The machine is off. Please turn it on');
+    try {
+      if (!this.hasPower) {
+        throw new CoffeeMachineException('The machine is off. Please turn it on.');
+      }
+      console.log('Available coffees:');
+      this.coffees.forEach((coffee) => {
+        console.log(`${coffee.getName()} - $${coffee.getPrice()} (${coffee.getStock()} in stock)`);
+      });
+    } catch (error) {
+      if (error instanceof CoffeeMachineException) {
+        throw new CoffeeMachineException(error.message);
+      }
     }
-    return this.coffees;
   }
 
   togglePower(state: boolean) {
@@ -26,30 +35,32 @@ export class CoffeeMachine {
     console.log(`Power ${state ? 'on' : 'off'}`);
   }
 
-  addCoffee(coffee: Coffee) {
-    this.coffees.push(coffee);
-    console.log(`${coffee.getName()} added to the machine.`);
-  }
-
-  removeCoffee(coffeeName: string) {
-    this.coffees = this.coffees.filter((c) => c.getName() !== coffeeName);
-    console.log(`${coffeeName} removed from the machine.`);
-  }
-
   refillWater(): void {
-    if (!this.hasPower) {
-      throw new CoffeeMachineException('The machine is off. Please turn it on.');
+    try {
+      if (!this.hasPower) {
+        throw new CoffeeMachineException('The machine is off. Please turn it on.');
+      }
+      this.waterLevel = 100;
+      console.log('Water refilled to 100%.');
+    } catch (error) {
+      if (error instanceof CoffeeMachineException) {
+        throw new CoffeeMachineException(error.message);
+      }
     }
-    this.waterLevel = 100;
-    console.log('Water refilled to 100%.');
   }
 
   insertMoney(amount: number): void {
-    if (!this.hasPower) {
-      throw new CoffeeMachineException('The machine is off. Please turn it on.');
+    try {
+      if (!this.hasPower) {
+        throw new CoffeeMachineException('The machine is off. Please turn it on.');
+      }
+      this.balance += amount;
+      console.log(`Inserted ${amount}. Current balance: ${this.balance}.`);
+    } catch (error) {
+      if (error instanceof CoffeeMachineException) {
+        throw new CoffeeMachineException(error.message);
+      }
     }
-    this.balance += amount;
-    console.log(`Inserted ${amount}. Current balance: ${this.balance}.`);
   }
 
   chooseCoffee(coffeeName: string): void {
@@ -71,8 +82,29 @@ export class CoffeeMachine {
       throw new CoffeeMachineException('Insufficient funds to afford the selected coffee.');
     }
 
-    this.balance -= coffee.getPrice();
-    this.waterLevel -= 10;
-    console.log(`Preparing ${coffeeName}... Enjoy your coffee!`);
+    try {
+      coffee?.decrementStock();
+      this.balance -= coffee.getPrice();
+      this.waterLevel -= 10;
+      console.log(`Preparing ${coffeeName}... Enjoy your coffee!`);
+    } catch (error) {
+      if (error instanceof CoffeeMachineException) {
+        throw new CoffeeMachineException(error.message);
+      }
+    }
+  }
+
+  restock(coffeeName: string, quantity: number) {
+    try {
+      const coffee = this.coffees.find((c) => c.getName() === coffeeName);
+      if (!coffee) {
+        throw new CoffeeMachineException(`The coffee ${coffeeName} is not available`);
+      }
+      coffee?.incrementStock(quantity);
+    } catch (error) {
+      if (error instanceof CoffeeMachineException) {
+        throw new CoffeeMachineException(error.message);
+      }
+    }
   }
 }
